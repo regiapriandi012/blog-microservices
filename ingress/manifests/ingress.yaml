@@ -1,0 +1,75 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: django-blog-ingress
+spec:
+  rules:
+  - host: regiapriandi.com
+  - http:
+      paths:
+      - path: /admin
+        pathType: Prefix
+        backend:
+          service:
+            name: djangoblog-admin-app-service
+            port:
+              number: 8000
+#      - path: /media
+#        pathType: Prefix
+#        backend:
+#          service:
+#            name: djangoblog-admin-app-service
+#            port:
+#              number: 8000
+      - path: /static
+        pathType: Prefix
+        backend:
+          service:
+            name: djangoblog-admin-app-service
+            port:
+              number: 8000
+#      - path: /summernote
+#        pathType: Prefix
+#        backend:
+#          service:
+#            name: djangoblog-admin-app-service
+#            port:
+#              number: 8000
+
+      - path: /blog
+        pathType: Prefix
+        backend:
+          service:
+            name: djangoblog-main-app-service
+            port:
+              number: 8001
+      - path: /media
+        pathType: Prefix
+        backend:
+          service:
+            name: djangoblog-main-app-service
+            port:
+              number: 8001
+      - path: /summernote
+        pathType: Prefix
+        backend:
+          service:
+            name: djangoblog-main-app-service
+            port:
+              number: 8001
+
+      - path: /feed/rss
+        pathType: Prefix
+        backend:
+          service:
+            name: djangoblog-rss-app-service
+            port:
+              number: 8002
+      
+      - path: /sitemap.xml
+        pathType: Prefix
+        backend:
+          service:
+            name: djangoblog-sitemap-app-service
+            port:
+              number: 8003

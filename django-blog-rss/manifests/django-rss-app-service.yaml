@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: djangoblog-rss-app-service
+spec:
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 8002
+      targetPort: 8002
+      nodePort: 30003
+  selector:
+    app: djangoblog-rss-app
+

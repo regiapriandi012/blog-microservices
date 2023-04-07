@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgresdata-pvc
+spec:
+  storageClassName: nfs-client
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:latest
+        env:
+          - name: POSTGRES_DB
+            value: "postgres"
+          - name: POSTGRES_USER
+            value: "regiapriandi"
+          - name: POSTGRES_PASSWORD
+            value: "postgres"
+          - name: POSTGRES_HOST_AUTH_METHOD
+            value: trust
+        args:
+        - -c
+        - max_connections=5000
+        - -c
+        - shared_buffers=2048MB
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: postgresdata
+      restartPolicy: Always
+      volumes:
+      - name: postgresdata
+        persistentVolumeClaim:
+          claimName: postgresdata-pvc

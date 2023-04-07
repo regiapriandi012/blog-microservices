@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: djangoblog-sitemap-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: djangoblog-sitemap-app
+  template:
+    metadata:
+      labels:
+        app: djangoblog-sitemap-app
+    spec:
+      containers:
+      - name: djangoblog-sitemap-app
+        image: regiapriandi012/django-sitemap-arm64:latest
+        readinessProbe:
+          httpGet:
+            path: /sitemap.xml
+            port: 8003
+          initialDelaySeconds: 30
+          periodSeconds: 20
+          timeoutSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /sitemap.xml
+            port: 8003
+          initialDelaySeconds: 30
+          periodSeconds: 20
+          timeoutSeconds: 10
+        ports:
+        - containerPort: 8003
+        env:
+        - name: DATABASE_HOST
+          value: "db"
+        - name: DATABASE_USER
+          value: "regiapriandi"
+        - name: DATABASE_PASSWORD
+          value: "postgres"
+        - name: DATABASE_NAME
+          value: "postgres"
